@@ -5,16 +5,34 @@ import Action from "./Action";
 import Options from "./Options";
 
 export default class IndecisionApp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
-    this.handlePick = this.handlePick.bind(this);
-    this.handleAddOption = this.handleAddOption.bind(this);
-    this.handleDeleteOption = this.handleDeleteOption.bind(this);
-    this.state = {
-      options: []
+
+  state = {
+    options: []
+  }
+
+  handlePick = () => {
+    const { options } = this.state;
+    const randomNum = Math.floor(Math.random() * options.length);
+    alert(options[randomNum]);
+  }
+
+  handleDeleteOptions = () => {
+    this.setState(() => ({ options: [] }));
+  }
+
+  handleDeleteOption = (optionToRemove) => {
+    this.setState((pre) => ({
+      options: pre.options.filter((el) => el !== optionToRemove)
+    }))
+  }
+
+  handleAddOption = (option) => {
+    if (!option) {
+      return "Enter valid value to add new item";
+    } else if (this.state.options.indexOf(option) > -1) {
+      return "This option is already exists"
     }
-    console.log("constructor");
+    this.setState((pre) => ({ options: pre.options.concat([option]) }))
   }
 
   componentDidMount() {
@@ -44,31 +62,6 @@ export default class IndecisionApp extends React.Component {
     console.log("will unmount");
   }
 
-  handlePick() {
-    const { options } = this.state;
-    const randomNum = Math.floor(Math.random() * options.length);
-    alert(options[randomNum]);
-  }
-
-  handleDeleteOptions() {
-    this.setState(() => ({ options: [] }));
-  }
-
-  handleDeleteOption(optionToRemove) {
-    this.setState((pre) => ({
-      options: pre.options.filter((el) => el !== optionToRemove)
-    }))
-  }
-
-  handleAddOption(option) {
-    if (!option) {
-      return "Enter valid value to add new item";
-    } else if (this.state.options.indexOf(option) > -1) {
-      return "This option is already exists"
-    }
-    this.setState((pre) => ({ options: pre.options.concat([option]) }))
-  }
-
   render() {
     const subTitle = "Put your life in the hands of a computer";
     console.log("render");
@@ -83,6 +76,5 @@ export default class IndecisionApp extends React.Component {
         <AddOptions handleAddOption={this.handleAddOption} />
       </div>
     )
-
   }
 }
